@@ -1,9 +1,9 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import User from "./pages/User";
 import Items from "./pages/Items";
 import TodoBox from "./pages/TodoBox";
-import { Link } from "react-router-dom";
+import Detail from "./pages/Detail";
 
 function App() {
   return (
@@ -16,6 +16,7 @@ function App() {
         <Route path="/user" element={<User />}></Route>
         <Route path="/items" element={<Items />}></Route>
         <Route path="/todo" element={<TodoBox />}></Route>
+        <Route path="/detail/:itemId" element={<Detail />}></Route>
       </Routes>
     </>
   );
