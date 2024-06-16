@@ -1,35 +1,77 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState, useId } from "react";
 // import { testRef } from "../firebase";
 import DB from "../firebase";
-import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  DocumentData,
+} from "firebase/firestore";
+import shortid from "shortid";
+
+interface UserType {
+  userId: string;
+  userImage: string;
+  userName: string;
+  carts: { cartId: string; totalCarts: number };
+  orders: { orderId: string; totalOrder: number };
+  sales: { salesId: string; totalSales: number };
+  address: string;
+  phone: string;
+}
 
 function User() {
-  const user = "user1";
-  const onClickAdd = async () => {
-    // 문서 하나 가져오기
-    // const users = doc(DB, "users", user);
-    // const usersSnapshot = await getDoc(users);
-    // if (!usersSnapshot.exists()) {
-    //   return null;
-    // }
-    // console.log(usersSnapshot.data());
-    // return usersSnapshot.data();
+  const userId = shortid.generate();
+  const cartId = shortid.generate();
+  const orderId = shortid.generate();
+  const saleId = shortid.generate();
 
+  const [user, setUser] = useState("");
+  const [userlist, setUserlist] = useState<UserType[]>([]);
+  const usersArray = [];
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser(e.target.value);
+  };
+
+  const onClickAdd = async () => {
+    const newUser = {
+      userId: userId,
+      userImage: "",
+      userName: user,
+      carts: { cartId: cartId, totalCarts: 0 },
+      orders: { orderId: orderId, totalOrder: 0 },
+      sales: { salesId: saleId, totalSales: 0 },
+      address: "서울시 강남구",
+      phone: "000-0000-0000",
+    };
+
+    await setDoc(doc(DB, "users", user), newUser);
+    alert(`${user}등록`);
+  };
+
+  const onClickShow = async () => {
     // 여러 문서 가져오기
     const usersSnapshot = await getDocs(collection(DB, "users"));
     usersSnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
       console.log(doc.id, " => ", doc.data());
+      usersArray.push(doc.data());
     });
+    // setUserlist(usersArray);
   };
-  const onClickShow = async () => {};
 
   return (
     <>
       <h1>User</h1>
       <ul>
+        {userlist.map((list: UserType) => (
+          <li key={list.userId}>{list.userName}</li>
+        ))}
         <li>{process.env.REACT_APP_TEST_NAME}</li>
       </ul>
+      <input type="text" onChange={onChange} />
       <button onClick={onClickAdd}>유저 데이터 등록</button>
       <button onClick={onClickShow}>유저 데이터 보기</button>
     </>
