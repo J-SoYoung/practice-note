@@ -62,10 +62,6 @@ function App() {
     });
   };
 
-  // 리뷰 테이블이 있다면
-  // (1) 상품을 기준으로 데이터를 찾을 수 있을까?
-  // (2) 유저 기준으로 데이터를 찾을 수 있을까?
-  // (3) 1,2가 안된다면 item안에 review넣어야함
   const writeReview = () => {
     const reviewId = "review6";
     set(ref(db, "reviews/" + reviewId), {
@@ -96,7 +92,6 @@ function App() {
     // });
     // return () => unsubscribe();
 
-    // 그냥 넣은거.. 무슨차이냐
     const itemId = "item5";
     const itemCountRef = ref(db, "items/");
     const unsubscribe = onValue(itemCountRef, (snapshot) => {
